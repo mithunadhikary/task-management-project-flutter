@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task-management-project-flutter/ui/widgets/screen_background.dart';
+import 'package:task_management_project_flutter/ui/widgets/screen_background.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

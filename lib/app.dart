@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task-management-project-flutter/ui/screens/sign_in_screen.dart';
-import 'package:task-management-project-flutter/ui/screens/splash_screen.dart';
+import 'package:task_management_project_flutter/ui/screens/sign_in_screen.dart';
+import 'package:task_management_project_flutter/ui/screens/splash_screen.dart';
 
 class TaskManagerApp extends StatelessWidget {
   const TaskManagerApp({super.key});
