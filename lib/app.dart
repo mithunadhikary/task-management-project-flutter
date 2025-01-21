@@ -7,6 +7,7 @@ import 'package:task_management_project_flutter/ui/screens/reset_password_screen
 import 'package:task_management_project_flutter/ui/screens/sign_in_screen.dart';
 import 'package:task_management_project_flutter/ui/screens/sign_up_screen.dart';
 import 'package:task_management_project_flutter/ui/screens/splash_screen.dart';
+import 'package:task_management_project_flutter/ui/screens/update_profile_screen.dart';
 import 'package:task_management_project_flutter/ui/utils/app_colors.dart';
 
 class TaskManagerApp extends StatelessWidget {
@@ -71,6 +72,8 @@ class TaskManagerApp extends StatelessWidget {
           widget = const MainBottomNavScreen();
         } else if (settings.name == AddNewTaskScreen.name) {
           widget = const AddNewTaskScreen();
+        } else if (settings.name == UpdateProfileScreen.name) {
+          widget = const UpdateProfileScreen();
         }
         return MaterialPageRoute(builder: (ctx) => widget);
       },
