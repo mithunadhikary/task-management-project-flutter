@@ -43,18 +43,18 @@ class TaskItemWidget extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    if (taskModel.status != 'Completed' && taskModel.status != 'Cancelled')
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.delete),
-                      ),
-                    if (taskModel.status != 'Completed')
-                      IconButton(
-                        onPressed: () {
-                          _updateTaskStatus(context, taskModel.sId, taskModel.status);
-                        },
-                        icon: const Icon(Icons.edit),
-                      ),
+                    IconButton(
+                      onPressed: () {
+                        _deleteTask(context, taskModel.sId);
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        _updateTaskStatus(context, taskModel.sId, taskModel.status);
+                      },
+                      icon: const Icon(Icons.edit),
+                    ),
                   ],
                 )
               ],
@@ -63,6 +63,41 @@ class TaskItemWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _deleteTask(BuildContext context, id) async {
+    bool? confirmStatusUpdate = await showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Delete Task'),
+          content: const Text('Are you sure you want to delete this task?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(false); // Return false on "No"
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(true); // Return true on "Yes"
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmStatusUpdate == true) {
+      final NetworkResponse response =
+      await NetworkCaller.getRequest(url: Urls.deleteTaskUrl(id));
+      if (response.isSuccess) {
+        showSnackBarMessage(context, "This Task has been successfully deleted!");
+      } else {
+        showSnackBarMessage(context, response.errorMessage);
+      }
+    }
   }
 
   Future<void> _updateTaskStatus(BuildContext context, id, status) async {
@@ -117,6 +152,8 @@ class TaskItemWidget extends StatelessWidget {
       return 'Progress';
     } else if (status == 'Progress') {
       return 'Completed';
+    } else if (status == 'Completed') {
+      return 'Cancelled';
     } else {
       return 'New';
     }
