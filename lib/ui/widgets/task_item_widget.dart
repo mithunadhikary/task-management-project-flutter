@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:task_management_project_flutter/data/models/task_model.dart';
 import 'package:task_management_project_flutter/data/services/network_caller.dart';
 import 'package:task_management_project_flutter/data/utils/urls.dart';
+import 'package:task_management_project_flutter/ui/screens/update_task_screen.dart';
 import 'package:task_management_project_flutter/ui/widgets/snack_bar_message.dart';
 
 class TaskItemWidget extends StatelessWidget {
@@ -51,7 +52,12 @@ class TaskItemWidget extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: () {
-                        _updateTaskStatus(context, taskModel.sId, taskModel.status);
+                        // _updateTaskStatus(context, taskModel.sId, taskModel.status);
+                        Navigator.pushNamed(
+                          context,
+                          UpdateTaskScreen.name,
+                          arguments: taskModel,
+                        );
                       },
                       icon: const Icon(Icons.edit),
                     ),
@@ -100,41 +106,6 @@ class TaskItemWidget extends StatelessWidget {
     }
   }
 
-  Future<void> _updateTaskStatus(BuildContext context, id, status) async {
-    bool? confirmStatusUpdate = await showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Update Status'),
-          content: const Text('Are you sure you want to update this task status?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop(false); // Return false on "No"
-              },
-              child: const Text('No'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop(true); // Return true on "Yes"
-              },
-              child: const Text('Yes'),
-            ),
-          ],
-        );
-      },
-    );
-    if (confirmStatusUpdate == true) {
-      final NetworkResponse response =
-      await NetworkCaller.getRequest(url: Urls.updateTaskStatusUrl(id, _getNextStatus(status)));
-      if (response.isSuccess) {
-        showSnackBarMessage(context, "Task status updated successfully!");
-      } else {
-        showSnackBarMessage(context, response.errorMessage);
-      }
-    }
-  }
-
   Color _getStatusColor(String status) {
     if (status == 'New') {
       return Colors.blue;
@@ -147,15 +118,4 @@ class TaskItemWidget extends StatelessWidget {
     }
   }
 
-  String _getNextStatus(String status) {
-    if (status == 'New') {
-      return 'Progress';
-    } else if (status == 'Progress') {
-      return 'Completed';
-    } else if (status == 'Completed') {
-      return 'Cancelled';
-    } else {
-      return 'New';
-    }
-  }
 }
