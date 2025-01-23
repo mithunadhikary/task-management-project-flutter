@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:task_management_project_flutter/data/models/task_list_by_status_model.dart';
+import 'package:task_management_project_flutter/data/services/network_caller.dart';
+import 'package:task_management_project_flutter/data/utils/urls.dart';
+import 'package:task_management_project_flutter/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_management_project_flutter/ui/widgets/screen_background.dart';
+import 'package:task_management_project_flutter/ui/widgets/snack_bar_message.dart';
 import 'package:task_management_project_flutter/ui/widgets/task_item_widget.dart';
 import 'package:task_management_project_flutter/ui/widgets/tm_app_bar.dart';
 
@@ -11,6 +16,14 @@ class ProgressTaskListScreen extends StatefulWidget {
 }
 
 class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
+  bool _getProgressTaskListInProgress = false;
+  TaskListByStatusModel? newTaskListModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _getProgressTaskList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +32,10 @@ class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
       body: ScreenBackground(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: _buildTaskListView(),
+          child: Visibility(
+              visible: _getProgressTaskListInProgress == false,
+              replacement: const CenteredCircularProgressIndicator(),
+              child: _buildTaskListView()),
         ),
       ),
     );
@@ -27,10 +43,28 @@ class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
 
   Widget _buildTaskListView() {
     return ListView.builder(
-      itemCount: 10,
+      shrinkWrap: true,
+      primary: false,
+      itemCount: newTaskListModel?.taskList?.length ?? 0,
       itemBuilder: (context, index) {
-        // return const TaskItemWidget();
+        return TaskItemWidget(
+          taskModel: newTaskListModel!.taskList![index],
+        );
       },
     );
+  }
+
+  Future<void> _getProgressTaskList() async {
+    _getProgressTaskListInProgress = true;
+    setState(() {});
+    final NetworkResponse response =
+    await NetworkCaller.getRequest(url: Urls.taskListByStatusUrl('Progress'));
+    if (response.isSuccess) {
+      newTaskListModel = TaskListByStatusModel.fromJson(response.responseData!);
+    } else {
+      showSnackBarMessage(context, response.errorMessage);
+    }
+    _getProgressTaskListInProgress = false;
+    setState(() {});
   }
 }
