@@ -17,7 +17,7 @@ class ProgressTaskListScreen extends StatefulWidget {
 
 class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
   bool _getProgressTaskListInProgress = false;
-  TaskListByStatusModel? newTaskListModel;
+  TaskListByStatusModel? progressTaskListModel;
 
   @override
   void initState() {
@@ -45,10 +45,10 @@ class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
     return ListView.builder(
       shrinkWrap: true,
       primary: false,
-      itemCount: newTaskListModel?.taskList?.length ?? 0,
+      itemCount: progressTaskListModel?.taskList?.length ?? 0,
       itemBuilder: (context, index) {
         return TaskItemWidget(
-          taskModel: newTaskListModel!.taskList![index],
+          taskModel: progressTaskListModel!.taskList![index],
         );
       },
     );
@@ -60,7 +60,7 @@ class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
     final NetworkResponse response =
     await NetworkCaller.getRequest(url: Urls.taskListByStatusUrl('Progress'));
     if (response.isSuccess) {
-      newTaskListModel = TaskListByStatusModel.fromJson(response.responseData!);
+      progressTaskListModel = TaskListByStatusModel.fromJson(response.responseData!);
     } else {
       showSnackBarMessage(context, response.errorMessage);
     }
