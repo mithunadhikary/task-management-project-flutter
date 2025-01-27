@@ -9,6 +9,9 @@ class Urls {
   static String taskListByStatusUrl(String status) =>
       '$_baseUrl/listTaskByStatus/$status';
 
+  static String recoverVerifyEmailUrl(String email) =>
+      '$_baseUrl/RecoverVerifyEmail/$email';
+
   static String updateTaskStatusUrl(String id, String status) =>
       '$_baseUrl/updateTaskStatus/$id/$status';
 

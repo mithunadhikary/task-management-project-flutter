@@ -1,8 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_management_project_flutter/data/services/network_caller.dart';
+import 'package:task_management_project_flutter/data/utils/urls.dart';
 import 'package:task_management_project_flutter/ui/screens/forgot_password_verify_otp_screen.dart';
 import 'package:task_management_project_flutter/ui/utils/app_colors.dart';
+import 'package:task_management_project_flutter/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_management_project_flutter/ui/widgets/screen_background.dart';
+import 'package:task_management_project_flutter/ui/widgets/snack_bar_message.dart';
 
 class ForgotPasswordVerifyEmailScreen extends StatefulWidget {
   const ForgotPasswordVerifyEmailScreen({super.key});
@@ -18,6 +22,7 @@ class _ForgotPasswordVerifyEmailScreenState
     extends State<ForgotPasswordVerifyEmailScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _forgotPasswordVerifyEmailScreenInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +50,24 @@ class _ForgotPasswordVerifyEmailScreenState
                     controller: _emailTEController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(hintText: 'Email'),
+                    validator: (String? value) {
+                      if (value?.trim().isEmpty ?? true) {
+                        return 'Enter an email address';
+                      }
+                      if (!value!.contains('@')) {
+                        return 'Enter a valid email address';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 24),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(
-                            context, ForgotPasswordVerifyOtpScreen.name);
-                      },
+                  Visibility(
+                    visible: _forgotPasswordVerifyEmailScreenInProgress == false,
+                    replacement: const CenteredCircularProgressIndicator(),
+                    child: ElevatedButton(
+                      onPressed: _onTapForgotPasswordVerifyEmailScreenInButton,
                       child: const Icon(Icons.arrow_circle_right_outlined),
+                    ),
                   ),
                   const SizedBox(height: 48),
                   Center(
@@ -65,6 +80,35 @@ class _ForgotPasswordVerifyEmailScreenState
         ),
       ),
     );
+  }
+
+  void _onTapForgotPasswordVerifyEmailScreenInButton() {
+    if (_formKey.currentState!.validate()) {
+      _forgotPasswordIn();
+    }
+  }
+
+  Future<void> _forgotPasswordIn() async {
+    _forgotPasswordVerifyEmailScreenInProgress = true;
+    setState(() {});
+    Map<String, dynamic> requestBody = {
+      "email": _emailTEController.text.trim(),
+    };
+    final NetworkResponse response =
+    await NetworkCaller.getRequest(url: Urls.recoverVerifyEmailUrl(_emailTEController.text.trim()));
+
+    if (response.isSuccess && response.responseData!['status'] != "fail") {
+      Navigator.pushNamed(
+          context, ForgotPasswordVerifyOtpScreen.name);
+    } else {
+      _forgotPasswordVerifyEmailScreenInProgress = false;
+      setState(() {});
+      if (response.statusCode == 401) {
+        showSnackBarMessage(context, 'Email is invalid! Try again.');
+      } else {
+        showSnackBarMessage(context, response.errorMessage);
+      }
+    }
   }
 
   Widget _buildSignInSection() {
