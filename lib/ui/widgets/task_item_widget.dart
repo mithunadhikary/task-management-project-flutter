@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:task_management_project_flutter/data/models/task_model.dart';
 import 'package:task_management_project_flutter/data/services/network_caller.dart';
 import 'package:task_management_project_flutter/data/utils/urls.dart';
+import 'package:task_management_project_flutter/ui/screens/main_bottom_nav_screen.dart';
 import 'package:task_management_project_flutter/ui/screens/update_task_screen.dart';
 import 'package:task_management_project_flutter/ui/widgets/snack_bar_message.dart';
 
@@ -100,6 +101,7 @@ class TaskItemWidget extends StatelessWidget {
       await NetworkCaller.getRequest(url: Urls.deleteTaskUrl(id));
       if (response.isSuccess) {
         showSnackBarMessage(context, "This Task has been successfully deleted!");
+        Navigator.pushNamed(context, MainBottomNavScreen.name);
       } else {
         showSnackBarMessage(context, response.errorMessage);
       }

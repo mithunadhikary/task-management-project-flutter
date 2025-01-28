@@ -11,6 +11,8 @@ import 'package:task_management_project_flutter/ui/widgets/tm_app_bar.dart';
 class CompletedTaskListScreen extends StatefulWidget {
   const CompletedTaskListScreen({super.key});
 
+  static const String name = '/completed-task-list-screen';
+
   @override
   State<CompletedTaskListScreen> createState() => _CompletedTaskListScreenState();
 }

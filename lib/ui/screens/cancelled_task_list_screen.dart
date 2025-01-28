@@ -11,6 +11,8 @@ import 'package:task_management_project_flutter/ui/widgets/tm_app_bar.dart';
 class CancelledTaskListScreen extends StatefulWidget {
   const CancelledTaskListScreen({super.key});
 
+  static const String name = '/cancelled-task-list-screen';
+
   @override
   State<CancelledTaskListScreen> createState() => _CancelledTaskListScreenState();
 }

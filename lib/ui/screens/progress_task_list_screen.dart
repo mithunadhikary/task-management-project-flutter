@@ -11,6 +11,8 @@ import 'package:task_management_project_flutter/ui/widgets/tm_app_bar.dart';
 class ProgressTaskListScreen extends StatefulWidget {
   const ProgressTaskListScreen({super.key});
 
+  static const String name = '/progress-task-list-screen';
+
   @override
   State<ProgressTaskListScreen> createState() => _ProgressTaskListScreenState();
 }

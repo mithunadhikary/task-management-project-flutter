@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:task_management_project_flutter/data/models/task_model.dart';
 import 'package:task_management_project_flutter/ui/screens/add_new_task_screen.dart';
+import 'package:task_management_project_flutter/ui/screens/cancelled_task_list_screen.dart';
+import 'package:task_management_project_flutter/ui/screens/completed_task_list_screen.dart';
 import 'package:task_management_project_flutter/ui/screens/forgot_password_verify_email_screen.dart';
 import 'package:task_management_project_flutter/ui/screens/forgot_password_verify_otp_screen.dart';
 import 'package:task_management_project_flutter/ui/screens/main_bottom_nav_screen.dart';
+import 'package:task_management_project_flutter/ui/screens/progress_task_list_screen.dart';
 import 'package:task_management_project_flutter/ui/screens/reset_password_screen.dart';
 import 'package:task_management_project_flutter/ui/screens/sign_in_screen.dart';
 import 'package:task_management_project_flutter/ui/screens/sign_up_screen.dart';
@@ -78,6 +81,12 @@ class TaskManagerApp extends StatelessWidget {
           widget = ResetPasswordScreen(email: args?['email'], otp: args?['otp']);
         } else if (settings.name == MainBottomNavScreen.name) {
           widget = const MainBottomNavScreen();
+        } else if (settings.name == ProgressTaskListScreen.name) {
+          widget = const ProgressTaskListScreen();
+        } else if (settings.name == CompletedTaskListScreen.name) {
+          widget = const CompletedTaskListScreen();
+        } else if (settings.name == CancelledTaskListScreen.name) {
+          widget = const CancelledTaskListScreen();
         } else if (settings.name == AddNewTaskScreen.name) {
           widget = const AddNewTaskScreen();
         } else if (settings.name == UpdateProfileScreen.name) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_management_project_flutter/data/services/network_caller.dart';
 import 'package:task_management_project_flutter/data/utils/urls.dart';
+import 'package:task_management_project_flutter/ui/screens/main_bottom_nav_screen.dart';
 import 'package:task_management_project_flutter/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_management_project_flutter/ui/widgets/screen_background.dart';
 import 'package:task_management_project_flutter/ui/widgets/snack_bar_message.dart';
@@ -102,6 +103,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
     if (response.isSuccess) {
       _clearTextFields();
       showSnackBarMessage(context, 'New task added!');
+      Navigator.pushNamed(context, MainBottomNavScreen.name);
     } else {
       showSnackBarMessage(context, response.errorMessage);
     }

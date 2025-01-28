@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:task_management_project_flutter/data/models/task_model.dart';
 import 'package:task_management_project_flutter/data/services/network_caller.dart';
 import 'package:task_management_project_flutter/data/utils/urls.dart';
+import 'package:task_management_project_flutter/ui/screens/cancelled_task_list_screen.dart';
+import 'package:task_management_project_flutter/ui/screens/completed_task_list_screen.dart';
+import 'package:task_management_project_flutter/ui/screens/main_bottom_nav_screen.dart';
+import 'package:task_management_project_flutter/ui/screens/progress_task_list_screen.dart';
 import 'package:task_management_project_flutter/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_management_project_flutter/ui/widgets/screen_background.dart';
 import 'package:task_management_project_flutter/ui/widgets/snack_bar_message.dart';
@@ -89,16 +93,31 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
     _updateTaskLoading = true;
     setState(() {});
 
+    final status = _statusTEController.text ?? '';
+
     final NetworkResponse response =
-    await NetworkCaller.getRequest(url: Urls.updateTaskStatusUrl(widget.task.sId ?? '', _statusTEController.text ?? ''));
+    await NetworkCaller.getRequest(url: Urls.updateTaskStatusUrl(widget.task.sId ?? '', status));
 
     _updateTaskLoading = false;
     setState(() {});
 
     if (response.isSuccess) {
       showSnackBarMessage(context, "Task status updated successfully!");
+      Navigator.pushNamed(context, _getNextScreen(status));
     } else {
       showSnackBarMessage(context, response.errorMessage);
+    }
+  }
+
+  String _getNextScreen(String status) {
+    if (status == 'New') {
+      return MainBottomNavScreen.name;
+    } else if (status == 'Progress') {
+      return ProgressTaskListScreen.name;
+    } else if(status == 'Completed') {
+      return CompletedTaskListScreen.name;
+    } else {
+      return CancelledTaskListScreen.name;
     }
   }
 }
