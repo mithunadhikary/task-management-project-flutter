@@ -86,13 +86,18 @@ class _ForgotPasswordVerifyOtpScreenState
 
   Future<void> _verifyOtpIn() async {
     final finalEmail = widget.email;
+    final finalOtp =  _otpTEController.text.trim();
     _verifyOtpScreenInProgress = true;
     setState(() {});
     final NetworkResponse response =
-    await NetworkCaller.getRequest(url: Urls.verifyEmailOtpUrl(finalEmail!, _otpTEController.text.trim()));
+    await NetworkCaller.getRequest(url: Urls.verifyEmailOtpUrl(finalEmail!, finalOtp));
 
     if (response.isSuccess && response.responseData!['status'] != "fail") {
-      Navigator.pushNamed(context, ResetPasswordScreen.name);
+      Navigator.pushNamed(
+        context,
+        ResetPasswordScreen.name,
+        arguments: {'email': finalEmail, 'otp': finalOtp},
+      );
     } else {
       _verifyOtpScreenInProgress = false;
       setState(() {});
