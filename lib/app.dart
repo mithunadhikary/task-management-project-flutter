@@ -61,6 +61,7 @@ class TaskManagerApp extends StatelessWidget {
 
       onGenerateRoute: (RouteSettings settings) {
         late Widget widget;
+
         if (settings.name == SplashScreen.name) {
           widget = const SplashScreen();
         } else if (settings.name == SignInScreen.name) {
@@ -70,7 +71,9 @@ class TaskManagerApp extends StatelessWidget {
         } else if (settings.name == ForgotPasswordVerifyEmailScreen.name) {
           widget = const ForgotPasswordVerifyEmailScreen();
         } else if (settings.name == ForgotPasswordVerifyOtpScreen.name) {
-          widget = const ForgotPasswordVerifyOtpScreen();
+          // Pass arguments to ForgotPasswordVerifyOtpScreen
+          final Map<String, dynamic>? args = settings.arguments as Map<String, dynamic>?;
+          widget = ForgotPasswordVerifyOtpScreen(email: args?['email']);
         } else if (settings.name == ResetPasswordScreen.name) {
           widget = const ResetPasswordScreen();
         } else if (settings.name == MainBottomNavScreen.name) {

@@ -91,15 +91,16 @@ class _ForgotPasswordVerifyEmailScreenState
   Future<void> _forgotPasswordIn() async {
     _forgotPasswordVerifyEmailScreenInProgress = true;
     setState(() {});
-    Map<String, dynamic> requestBody = {
-      "email": _emailTEController.text.trim(),
-    };
     final NetworkResponse response =
     await NetworkCaller.getRequest(url: Urls.recoverVerifyEmailUrl(_emailTEController.text.trim()));
 
     if (response.isSuccess && response.responseData!['status'] != "fail") {
+      final email = response.responseData!['data']['accepted'][0];
       Navigator.pushNamed(
-          context, ForgotPasswordVerifyOtpScreen.name);
+          context,
+          ForgotPasswordVerifyOtpScreen.name,
+          arguments: {'email': email},
+      );
     } else {
       _forgotPasswordVerifyEmailScreenInProgress = false;
       setState(() {});
